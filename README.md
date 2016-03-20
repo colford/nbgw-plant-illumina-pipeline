@@ -32,6 +32,7 @@ The script expects the following to be avaliable on the HPC.
 # How to run
 First copy the *.fastq.gz files that were output by the illumina processing in to a directory. Run the plant-pipeline.py program and point it at the directory that contains the *.fastq.gz files. The program is menu driven and takes you through each step. The script will setup the directory with the *.fastq.gz files in the following manner:
  
+```
   <working-directory>
      original-fastq/                 <- the script will copy all the *.fastq.gz files in to here
      slrum-files/                    <- the script will output slrum files to be run by the user
@@ -47,7 +48,8 @@ First copy the *.fastq.gz files that were output by the illumina processing in t
              merged/                 <- Sequences that could be merged
              not-merged/             <- Sequences that could not be merged
              qc/                     <- Quality histograms on merged data
-             
+```
+
 At each stage the pipeline will create SLURM files and place them in the slrum-files directory. These should be run manually by the user using the appropriate SLURM commands e.g. sbatch <file>.slrum. The running SLURM processes will first touch a "running" file to indicate it has started e.g. "adaptor_check_running" when the process has finished it will mv the running file to a "done" file e.g. "adaptor_check_done". The running process will also redirect stdout and stderr to the process name plus their job number e.g. "adaptor_check_964605.out" and "adaptor_check_964605.err". Some of the processes output to stdout and some to stderr so it's best to check both.
 
 
