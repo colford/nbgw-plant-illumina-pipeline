@@ -50,10 +50,10 @@ First copy the *.fastq.gz files that were output by the illumina processing in t
              qc/                     <- Quality histograms on merged data
 ```
 
-At each stage the pipeline will create SLURM files and place them in the slrum-files directory. These should be run manually by the user using the appropriate SLURM commands e.g. sbatch <file>.slrum. The running SLURM processes will first touch a "running" file to indicate it has started e.g. "adaptor_check_running" when the process has finished it will mv the running file to a "done" file e.g. "adaptor_check_done". The running process will also redirect stdout and stderr to the process name plus their job number e.g. "adaptor_check_964605.out" and "adaptor_check_964605.err". Some of the processes output to stdout and some to stderr so it's best to check both.
+At each stage the pipeline will create SLURM files and place them in the slrum-files directory. These should be run manually by the user using the appropriate SLURM commands e.g. sbatch ```<file>.slrum```. The running SLURM processes will first touch a "running" file to indicate it has started e.g. "adaptor_check_running" when the process has finished it will mv the running file to a "done" file e.g. "adaptor_check_done". The running process will also redirect stdout and stderr to the process name plus their job number e.g. "adaptor_check_964605.out" and "adaptor_check_964605.err". Some of the processes output to stdout and some to stderr so it's best to check both.
 
 ## Helper scripts
-There are two helper scripts that extract data out of some of the output files in to a summary table for easy digestion. There are outlined below.
+There are two helper scripts that extract data out of some of the output files in to a summary table for easy digestion. These are outlined below.
 
 ### process_trim_stats.py
 This script works upon trim_and_pair_original_files_<jobid>.err file. Given the file as input it will output a CSV file containing the sample, total number of reads, successful trim and paired number, forwards only, reverse only and dropped.
