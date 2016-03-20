@@ -49,7 +49,8 @@ First copy the *.fastq.gz files that were output by the illumina processing in t
              merged/                           <- Sequences that could be merged
              merged-length-selected/           <- Merged sequences selected for length (fastq)
              merged-length-secected-fasta/     <- Merged sequences output as fasta
-             merged-length-selected-calapsed/  <- Merged sequences collapsed from fastas i.e. identical sequences combined
+             merged-length-selected-calapsed/  <- Merged sequences collapsed from fastas 
+                                                  i.e. identical sequences combined
              not-merged/                       <- Sequences that could not be merged
              qc/                               <- Quality histograms on merged data
 ```
