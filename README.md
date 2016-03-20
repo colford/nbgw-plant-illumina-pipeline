@@ -61,7 +61,5 @@ This script works upon trim_and_pair_original_files_<jobid>.err file. Given the 
 ### process_merge_stats.py
 This script works upon merge_trim_and_paired_files_<jobid>.out file. Given the file as input it will output a CSV file containing the sample, number of reads, combined, uncombined and percent combined. 
 
-
-         
-         
-     
+# Running BLAST on the output
+```<tbd>```
