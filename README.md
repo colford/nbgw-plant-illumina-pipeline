@@ -1,5 +1,5 @@
 # NBGW Plant Illumina Pipeline
-This is a pipeline for processing of plant DNA data from an illumina run as employed by the National Botanic Garden of Wales. 
+This is a pipeline for processing of plant DNA data from an illumina run as employed by the National Botanic Garden of Wales. It is based upon Dan Smith's (Aberystwyth University) original plant pipeline.
 
 # Overview
 The plant illumina pipeline is a Python script that aids in processing illumina sequences. It has been successfully used to process DNA barcode rbcL sequences that have been sequenced using an illumina machine. The script is currently specilised to run on a SLURM base HPC, specifically the Wales HPC as the SLURM resources and queue names are hardcoded at the moment.
