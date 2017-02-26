@@ -79,3 +79,7 @@ Once you have run through the pipeline and you have your collapsed FASTA files t
  8. The csv output for each BLAST file will be output in "blast_results"
  9. Once the BLAST has finished run bin/blast_summary.py to summerise the BLAST results for each file.
  10. Once the BLAST summary has finished run the bin/create_blast_results_table.py to summarise the summaries.
+
+# Papers that the pipeline was used in
+1. [Using DNA metabarcoding to investigate honey bee foraging reveals limited flower use despite high floral availability](http://www.nature.com/articles/srep42838)
+2. [Using DNA Metabarcoding to Identify the Floral Composition of Honey: A New Tool for Investigating Honey Bee Foraging Preferences](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0134735)
