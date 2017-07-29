@@ -395,7 +395,7 @@ def do_run_trim_and_pair_original_fastq_files(config):
 	unique = []
 	for fname in find_files(original_files_dir(config),'*.fastq.gz'):
 		head, tail = os.path.split(fname)
-		unique.append('%s_R' % '_'.join(tail.split('_')[0:3]))
+		unique.append('%s_R' % '_'.join(tail.split('_')[0:-2]))
 	idens = list(set(unique))
 
 	paired_dir = os.path.join( trim_paired_files_dir(config), 'paired' ) 
@@ -457,7 +457,7 @@ def do_run_merge_on_trim_and_paired_files(config):
 	unique = []
 	for fname in find_files(paired_dir,'*.fastq.gz'):
 		head, tail = os.path.split(fname)
-		unique.append('%s_R' % '_'.join(tail.split('_')[0:3]))
+		unique.append('%s_R' % '_'.join(tail.split('_')[0:-2]))
 	idens = list(set(unique))
 
 	create_dir(merged_dir)
