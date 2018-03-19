@@ -123,6 +123,23 @@ def adaptor_dir(config):
 	if 'adaptor_dir' in config.section('general'):
 		return config.section('general')['adaptor_dir']
 	return 'Not set'
+	
+################################################################################
+################################################################################
+def do_set_primer_dir(config):
+    print('Enter file with path:'),
+	new_primer_dir = raw_input()	
+	if os.path.isfile(new_primer_dir):
+		config.section_add('general','primer_dir',new_primer_dir)
+	else:
+	    return 'File not found'
+		
+################################################################################
+################################################################################
+def primer_dir(config):
+	if 'primer_dir' in config.section('general'):
+		return config.section('general')['primer_dir']
+	return 'Not set'
 
 ################################################################################
 ################################################################################
@@ -580,7 +597,52 @@ def do_convert_and_calapse_to_fasta(config):
                 running_file(config,'selected_merged_files_convert_and_calapse_done')))
     fd.close()
 
+################################################################################
+################################################################################
+def split_markers(config):
+    # Quick check to see if we can find the illumina adaptors
+    # make sure everything is in order
+    project = config.section('general')['project_dir']
+    slrum_file = os.path.join(slrum_dir(config), '8_split_markers.slrum')
 
+    # Create the SLRUM file to run the adptor check
+    print('Writing job file: %s' % slrum_file)
+    fd = open(slrum_file, 'w')
+
+    fd.write('#!/bin/bash --login\n')
+    fd.write('#SBATCH --job-name=split_markers\n')
+    fd.write('#SBATCH --output=split_markers_%j.out\n')
+    fd.write('#SBATCH --error=split_markers_%j.err\n')
+    fd.write('#SBATCH --exclusive\n')
+    fd.write('#SBATCH --ntasks=1\n')
+    fd.write('#SBATCH --time=0-05:00\n')
+    fd.write('#SBATCH --mem-per-cpu=8000\n')
+    fd.write('touch %s\n' % running_file(config,'split_markers_running'))
+    fd.write('# Code to run the procedure\n')
+    fd.write('echo "Splitting sequences by primer"\n')
+
+    paried_merged_dir = os.path.join( trim_paired_files_dir(config), 'paired-merged' )
+
+    fasta_calapsed_dir = os.path.join(paried_merged_dir, 'merged-length-selected-calapsed' )
+    split_markers_dir = os.path.join( paried_merged_dir, 'split-marker-genes' )
+    files = find_files(fasta_calapsed_dir, '*.fasta')
+	
+    #where is the split primer script?
+    def get_script_path():
+	return os.path.dirname(os.path.realpath(sys.argv[0]))
+    script_dir = get_script_path()
+
+    create_dir(split_markers_dir)
+
+    fd.write("for file in %s/*merged.fasta;\ndo\npython %s/Split_on_Primer.py -f $file -p %s -m 1 -s 3;\ndone\n\n" % (fasta_calapsed_dir,script_dir,primer_dir(config)))
+    fd.write("mv %s/*merged-*.fasta %s/\n\n" % (fasta_calapsed_dir, split_markers_dir))
+
+    fd.write('mv %s %s\n' % (running_file(config,'split_markers_running'),
+                running_file(config,'split_markers_done')))
+    fd.close()
+
+	
+	
 ################################################################################
 ################################################################################
 def had_trim_and_pair_on_original_been_run(config):
@@ -611,19 +673,29 @@ def had_selected_merged_files_been_converted_to_fasta(config):
 
 ################################################################################
 ################################################################################
+
 def top_menu(config):
 	key_dispatch =  { 'e': do_end, 
-					  'E': do_end,
-					  '1': do_set_current_project_dir,
-					  '2': do_set_adaptor_dir,
-					  '3': do_setup_pipeline_in_current_project_dir,
-					  '4': do_run_adaptor_check_on_original_fastq_files,
-					  '5': do_run_fastqc_validator_on_original_fastq_files,
-					  '6': do_run_fastqc_on_original_fastq_files,
-					  '7': do_run_trim_and_pair_original_fastq_files,
-					  '8': do_run_merge_on_trim_and_paired_files,
-					  '9': do_remove_merges_under_length,
-					  'a': do_convert_and_calapse_to_fasta }
+					  'Q': do_end,
+					  'q': do_end,
+					  'a': do_set_current_project_dir,
+					  'A': do_set_current_project_dir,
+					  'b': do_set_adaptor_dir,
+					  'B': do_set_adaptor_dir,
+					  'c': do_set_primer_dir,
+					  'C': do_set_primer_dir,
+					  'D': set_trimmomatic_jar,
+					  'd': set_trimmomatic_jar,
+					  'e': do_setup_pipeline_in_current_project_dir,
+					  'E': do_setup_pipeline_in_current_project_dir,
+					  '1': do_run_adaptor_check_on_original_fastq_files,
+					  '2': do_run_fastqc_validator_on_original_fastq_files,
+					  '3': do_run_fastqc_on_original_fastq_files,
+					  '4': do_run_trim_and_pair_original_fastq_files,
+					  '5': do_run_merge_on_trim_and_paired_files,
+					  '6': do_remove_merges_under_length,
+					  '7': do_convert_and_calapse_to_fasta,
+					  '8': split_markers }
 
 	while True:
 		print('')
@@ -631,7 +703,8 @@ def top_menu(config):
 		print('-----------------------')
 		if 'project_dir' in config.section('general'):
 			print('Current project dir                                             : %s' % config.section('general')['project_dir'])
-			print('Current adaptor dir                                             : %s' % adaptor_dir(config))
+			print('Current adaptor file                                            : %s' % adaptor_dir(config))
+			print('Current primer file                                             : %s' % primer_dir(config))
 			print('Project dir state                                               : %s' % current_project_state(config))
 			print('Has adaptor check been run?                                     : %s' % had_adaptor_check_been_run(config))
 			print('Has fastq been validated?                                       : %s' % had_fastq_been_validated(config))
@@ -641,19 +714,21 @@ def top_menu(config):
 			print('Has merged files been length selected?                          : %s' % had_merged_files_been_length_selected(config))
 			print('Has selected merged files been converted and calapsed to fasta? : %s' % had_selected_merged_files_been_converted_to_fasta(config))
 		print('')
-		print('1. Set current project director')
-		print('2. Set current adaptor director')
-		if current_project_state(config) == 'Not set-up':
-			print('3. Set-up pipeline in current project director')
-		else:
-			print('4. Run adaptor check on original fastq files from (3)')
-			print('5. Run fastq validator on original fastq files from (3)')
-			print('6. Run fastqc on original fastq files from (3)')
-			print('7. Run trim and pair on original fastq files from (3)')
-			print('8. Run merge on trim and paired fastq files from (7)')
-			print('9. Run length selection on merged fastq files from (8)')
-			print('a. Run convert and calapse to fasta on merged files from (9)')
-		print('E. Exit')
+		print('A. Set current project director')
+		print('B. Set current adaptor file')
+		print('C. (Optional) Set location of primer file')
+		#if current_project_state(config) == 'Not set-up':
+		print('E. Set-up pipeline in current project director')
+		#else:
+		print('1. Run adaptor check on original fastq files from (D)')
+		print('2. Run fastq validator on original fastq files from (D)')
+		print('3. Run fastqc on original fastq files from (D)')
+		print('4. Run trim and pair on original fastq files from (D)')
+		print('5. Run merge on trim and paired fastq files from (4)')
+		print('6. Run length selection on merged fastq files from (5)')
+		print('7. Run convert and collapse to fasta on merged files from (6)')
+		print('8. (Optional) Seperate marker genes based on primer sequences')
+		print('Q. Quit')
 		print('')
 		print('Enter option:'),
 		option = raw_input()
