@@ -128,18 +128,18 @@ def adaptor_dir(config):
 ################################################################################
 def do_set_primer_dir(config):
     print('Enter file with path:'),
-	new_primer_dir = raw_input()	
-	if os.path.isfile(new_primer_dir):
-		config.section_add('general','primer_dir',new_primer_dir)
-	else:
-	    return 'File not found'
+    new_primer_dir = raw_input()	
+    if os.path.isfile(new_primer_dir):
+        config.section_add('general','primer_dir',new_primer_dir)
+    else:
+        return 'File not found'
 		
 ################################################################################
 ################################################################################
 def primer_dir(config):
-	if 'primer_dir' in config.section('general'):
-		return config.section('general')['primer_dir']
-	return 'Not set'
+    if 'primer_dir' in config.section('general'):
+        return config.section('general')['primer_dir']
+    return 'Not set'
 
 ################################################################################
 ################################################################################
@@ -243,9 +243,9 @@ def do_run_adaptor_check_on_original_fastq_files(config):
 	fd.write('adaptor[7]=Nextera_TruseqPCRi5rc:GTGTAGATCTCGGTGGTCGCCGTATCATT\n')
 	fd.write('adaptor[8]=Nextera_TruseqPCRi7:CAAGCAGAAGACGGCATACGAGAT\n')
 	fd.write('adaptor[9]=Nextera_TruseqPCRi7rc:ATCTCGTATGCCGTCTTCTGCTTG\n')
-	fd.write('adaptor[10]=D701–D712_adapters:GATCGGAAGAGCACACGTCTGAACTCCAGTCAC\n')
-	fd.write('adaptor[11]=Truseq3_D501–D508_afterIndex:ACACTCTTTCCCTACACGACGCTCTTCCGATCT\n')
-	fd.write('adaptor[12]=Truseq3_D501–D508_afterIndex_rc:AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT\n')
+	fd.write('adaptor[10]=D701â€“D712_adapters:GATCGGAAGAGCACACGTCTGAACTCCAGTCAC\n')
+	fd.write('adaptor[11]=Truseq3_D501â€“D508_afterIndex:ACACTCTTTCCCTACACGACGCTCTTCCGATCT\n')
+	fd.write('adaptor[12]=Truseq3_D501â€“D508_afterIndex_rc:AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT\n')
 	fd.write('# Truseq3\n')
 	fd.write('adaptor[13]=Truseq3_PE1:TACACTCTTTCCCTACACGACGCTCTTCCGATCT\n')
 	fd.write('adaptor[14]=Truseq3_PE1rc_SE-Universal:AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA\n')
@@ -567,7 +567,8 @@ def do_convert_and_calapse_to_fasta(config):
     fd.write('#SBATCH --mem-per-cpu=8000\n')
     fd.write('touch %s\n' % running_file(config,'selected_merged_files_convert_and_calapse_running'))
     fd.write('# Modules\n')
-    fd.write('module add fastx_toolkit/0.0.13.2\n')
+    fd.write('module add fastx_toolkit/0.0.14\n')
+    
     fd.write('# Code to run the procedure\n')
     fd.write('echo "Running convert and calapse to fasta on merged files"\n')
 
@@ -684,10 +685,8 @@ def top_menu(config):
 					  'B': do_set_adaptor_dir,
 					  'c': do_set_primer_dir,
 					  'C': do_set_primer_dir,
-					  'D': set_trimmomatic_jar,
-					  'd': set_trimmomatic_jar,
-					  'e': do_setup_pipeline_in_current_project_dir,
-					  'E': do_setup_pipeline_in_current_project_dir,
+					  'd': do_setup_pipeline_in_current_project_dir,
+					  'D': do_setup_pipeline_in_current_project_dir,
 					  '1': do_run_adaptor_check_on_original_fastq_files,
 					  '2': do_run_fastqc_validator_on_original_fastq_files,
 					  '3': do_run_fastqc_on_original_fastq_files,
@@ -718,7 +717,7 @@ def top_menu(config):
 		print('B. Set current adaptor file')
 		print('C. (Optional) Set location of primer file')
 		#if current_project_state(config) == 'Not set-up':
-		print('E. Set-up pipeline in current project director')
+		print('D. Set-up pipeline in current project director')
 		#else:
 		print('1. Run adaptor check on original fastq files from (D)')
 		print('2. Run fastq validator on original fastq files from (D)')
