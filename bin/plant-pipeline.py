@@ -210,7 +210,7 @@ def do_run_adaptor_check_on_original_fastq_files(config):
 	# Quick check to see if we can find the illumina adaptors
 	# make sure everything is in order
 	project = config.section('general')['project_dir']
-	slrum_adaptor_check = os.path.join(slrum_dir(config), 'adaptor_check.slrum')
+	slrum_adaptor_check = os.path.join(slrum_dir(config), '1_adaptor_check.slrum')
 
 	# Make the QC directory for the results of the adpator check
 	create_dir(original_qc_dir(config))
@@ -243,9 +243,9 @@ def do_run_adaptor_check_on_original_fastq_files(config):
 	fd.write('adaptor[7]=Nextera_TruseqPCRi5rc:GTGTAGATCTCGGTGGTCGCCGTATCATT\n')
 	fd.write('adaptor[8]=Nextera_TruseqPCRi7:CAAGCAGAAGACGGCATACGAGAT\n')
 	fd.write('adaptor[9]=Nextera_TruseqPCRi7rc:ATCTCGTATGCCGTCTTCTGCTTG\n')
-	fd.write('adaptor[10]=D701â€“D712_adapters:GATCGGAAGAGCACACGTCTGAACTCCAGTCAC\n')
-	fd.write('adaptor[11]=Truseq3_D501â€“D508_afterIndex:ACACTCTTTCCCTACACGACGCTCTTCCGATCT\n')
-	fd.write('adaptor[12]=Truseq3_D501â€“D508_afterIndex_rc:AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT\n')
+	fd.write('adaptor[10]=D701Ã¢â‚¬â€œD712_adapters:GATCGGAAGAGCACACGTCTGAACTCCAGTCAC\n')
+	fd.write('adaptor[11]=Truseq3_D501Ã¢â‚¬â€œD508_afterIndex:ACACTCTTTCCCTACACGACGCTCTTCCGATCT\n')
+	fd.write('adaptor[12]=Truseq3_D501Ã¢â‚¬â€œD508_afterIndex_rc:AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT\n')
 	fd.write('# Truseq3\n')
 	fd.write('adaptor[13]=Truseq3_PE1:TACACTCTTTCCCTACACGACGCTCTTCCGATCT\n')
 	fd.write('adaptor[14]=Truseq3_PE1rc_SE-Universal:AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA\n')
@@ -302,7 +302,7 @@ def do_run_fastqc_validator_on_original_fastq_files(config):
 	# Quick check to see if we can find the illumina adaptors
 	# make sure everything is in order
 	project = config.section('general')['project_dir']
-	slrum_file = os.path.join(slrum_dir(config), 'fastq_validator_check.slrum')
+	slrum_file = os.path.join(slrum_dir(config), '2_fastq_validator_check.slrum')
 
 	# Make the QC directory for the results 
 	create_dir(original_qc_dir(config))
@@ -345,7 +345,7 @@ def do_run_fastqc_on_original_fastq_files(config):
 	# Quick check to see if we can find the illumina adaptors
 	# make sure everything is in order
 	project = config.section('general')['project_dir']
-	slrum_file = os.path.join(slrum_dir(config), 'fastq_original.slrum')
+	slrum_file = os.path.join(slrum_dir(config), '3_fastqc_original.slrum')
 
 	# Make the QC directory for the results 
 	create_dir(original_qc_dir(config))
@@ -388,7 +388,7 @@ def do_run_trim_and_pair_original_fastq_files(config):
 	# Quick check to see if we can find the illumina adaptors
 	# make sure everything is in order
 	project = config.section('general')['project_dir']
-	slrum_file = os.path.join(slrum_dir(config), 'trim_and_pair_original_files.slrum')
+	slrum_file = os.path.join(slrum_dir(config), '4_trim_and_pair_original_files.slrum')
 
 	# Create the SLRUM file to run the adptor check
 	print('Writing job file: %s' % slrum_file)
@@ -445,7 +445,7 @@ def do_run_merge_on_trim_and_paired_files(config):
 	# Quick check to see if we can find the illumina adaptors
 	# make sure everything is in order
 	project = config.section('general')['project_dir']
-	slrum_file = os.path.join(slrum_dir(config), 'merge_trim_and_paired_files.slrum')
+	slrum_file = os.path.join(slrum_dir(config), '5_merge_trim_and_paired_files.slrum')
 
 	# Create the SLRUM file to run the adptor check
 	print('Writing job file: %s' % slrum_file)
@@ -505,7 +505,7 @@ def do_remove_merges_under_length(config):
 	# Quick check to see if we can find the illumina adaptors
 	# make sure everything is in order
 	project = config.section('general')['project_dir']
-	slrum_file = os.path.join(slrum_dir(config), 'merged_files_length_selection.slrum')
+	slrum_file = os.path.join(slrum_dir(config), '6_merged_files_length_selection.slrum')
 
 	# Create the SLRUM file to run the adptor check
 	print('Writing job file: %s' % slrum_file)
@@ -551,7 +551,7 @@ def do_convert_and_calapse_to_fasta(config):
     # Quick check to see if we can find the illumina adaptors
     # make sure everything is in order
     project = config.section('general')['project_dir']
-    slrum_file = os.path.join(slrum_dir(config), 'selected_merged_files_convert_and_calapse.slrum')
+    slrum_file = os.path.join(slrum_dir(config), '7_selected_merged_files_convert_and_calapse.slrum')
 
     # Create the SLRUM file to run the adptor check
     print('Writing job file: %s' % slrum_file)
