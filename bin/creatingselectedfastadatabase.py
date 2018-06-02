@@ -282,19 +282,3 @@ with open("restrictedreferencelibrary.fas", "w") as fd:
 
 print(total1)
 print(total2)
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
