@@ -2,9 +2,9 @@
 This is a pipeline for processing of plant DNA data from an illumina run as employed by the National Botanic Garden of Wales. It is based upon Dan Smith's (Aberystwyth University) original plant pipeline.
 
 # Overview
-The plant illumina pipeline is a Python script that aids in processing illumina sequences. It has been successfully used to process DNA barcode rbcL sequences that have been sequenced using an illumina machine. The script is currently specilised to run on a SLURM base HPC, specifically the Wales HPC as the SLURM resources and queue names are hardcoded at the moment.
+The plant illumina pipeline is a Python script that aids in processing illumina sequences. It has been successfully used to process DNA barcode rbcL sequences that have been sequenced using an illumina machine. The script is currently specialised to run on a SLURM base HPC, specifically the Wales HPC as the SLURM resources and queue names are hardcoded at the moment.
 
-The pipeline has the folling flow:
+The pipeline has the following flow:
 
  1. Copy *.fastq.gz files in to a directory.
  2. Run bin/plant-pipeline.py
@@ -77,7 +77,7 @@ Once you have run through the pipeline and you have your collapsed FASTA files t
  6. Edit the blast-file-template.txt directory paths and edit the database names in the blastn command line.
  7. Run the make-jobs.sh script. This will create the jobs in the slrum/ directory and start running them.
  8. The csv output for each BLAST file will be output in "blast_results"
- 9. Once the BLAST has finished run bin/blast_summary.py to summerise the BLAST results for each file.
+ 9. Once the BLAST has finished run bin/blast_summary.py to summarise the BLAST results for each file.
  10. Once the BLAST summary has finished run the bin/create_blast_results_table.py to summarise the summaries.
 
 # Papers that the pipeline was used in
