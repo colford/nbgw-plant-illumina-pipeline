@@ -88,3 +88,7 @@ This script works upon merge_trim_and_paired_files_<jobid>.out file. Given the f
 # Papers that the pipeline was used in
 1. [Using DNA metabarcoding to investigate honey bee foraging reveals limited flower use despite high floral availability](http://www.nature.com/articles/srep42838)
 2. [Using DNA Metabarcoding to Identify the Floral Composition of Honey: A New Tool for Investigating Honey Bee Foraging Preferences](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0134735)
+3. [Temperate airborne grass pollen defined by spatio-temporal shifts in community composition](https://www.nature.com/articles/s41559-019-0849-7?platform=hootsuite)
+4. [Generalisation and specialisation in hoverfly (Syrphidae) grassland pollen transport networks revealed by DNA metabarcoding](https://doi.org/10.1111/1365-2656.12828)
+5. [Pollen metabarcoding reveals broad and species-specific resource use by urban bees](https://doi.org/10.7717/peerj.5999)
+7. [Floral resource partitioning by individuals within generalised hoverfy pollination networks revealed by DNA metabarcoding](https://doi.org/10.1038/s41598-018-23103-0)
