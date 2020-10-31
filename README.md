@@ -1,22 +1,26 @@
 # NBGW Plant Illumina Pipeline
-This is a pipeline for processing of plant DNA data from an illumina run as employed by the National Botanic Garden of Wales. It is based upon Dan Smith's (Aberystwyth University) original plant pipeline.
+
+This is a pipeline for processing of plant DNA data from an Illumina run as employed by the National Botanic Garden of Wales. It is based upon Dan Smith's (Aberystwyth University) original plant pipeline.
 
 # Overview
-The plant illumina pipeline is a Python script that aids in processing illumina sequences. It has been successfully used to process DNA barcode rbcL sequences that have been sequenced using an illumina machine. The script is currently specialised to run on a SLURM base HPC, specifically the Wales HPC as the SLURM resources and queue names are hardcoded at the moment.
+The plant illumina pipeline is a Python script that aids in processing Illumina sequences. It has been successfully used to process DNA barcode *rbcL* and ITS2 sequences that have been sequenced using an Illumina machine. The script is currently specialised to run on a SLURM base HPC, specifically the Wales HPC as the SLURM resources and queue names are hardcoded.
 
 The pipeline has the following flow:
 
- 1. Copy *.fastq.gz files in to a directory.
+ 1. Copy \*.fastq.gz files in to a directory.
  2. Run bin/plant-pipeline.py
  3. Set work directory
- 4. Run adaptor check to look for contanimation
- 5. Run fastq validator to valid fastq files
- 6. Run fastqc to get a measure of quality
- 7. Run trim and pair to get good quality paired reads
- 8. Run merge on trim and pair output
- 9. Run length selection on merged output
- 10. Conver and collapse to merged fastq to fasta format
- 11. Run BLAST on fasta output against a given BLAST database
+ 4. Set project quality score
+ 5. Run adaptor check to look for contamination
+ 6. Run fastq validator to valid fastq files
+ 7. Run fastqc to get a measure of quality
+ 8. Run trim and pair to get good quality paired reads
+ 9. Run merge on trim and pair output  
+10. (a) Demultiplex the merged output by primer, length select, convert to fasta and dereplicate the sequences within each sample
+11. (b) Concatenate all fasta files and cluster sequences and remove singletons.
+12. (c) BLAST the sequences and summarise results
+
+The final output creates an excel file which can be used to manually check the identifications. When the IDs are confirmed, the results are summarised using *create_summary_matrix.py* to output a matrix of samples versus taxa.
  
 # Dependencies
 The script expects the following to be avaliable on the HPC. 
@@ -29,13 +33,14 @@ The script expects the following to be avaliable on the HPC.
  5. FLASH/1.2.11
  6. fastx_toolkit/0.0.13.2
  7. BLAST+/2.2.31
+ 8. VSERACH
 
 # How to run the Plant Pipeline
 First copy the *.fastq.gz files that were output by the illumina processing in to a directory. Run the plant-pipeline.py program and point it at the directory that contains the *.fastq.gz files. The program is menu driven and takes you through each step. The script will setup the directory with the *.fastq.gz files in the following manner:
  
 ```
   <working-directory>
-     original-fastq/                           <- the script will copy all the *.fastq.gz files in to here
+     original-fastq/                           <- the script will copy all the *.fastq.gz files into here
      slrum-files/                              <- the script will output slrum files to be run by the user
      original-qc/                              <- QC output on original files
          adaptor_check.txt                     <- Adaptor check output
@@ -43,42 +48,40 @@ First copy the *.fastq.gz files that were output by the illumina processing in t
          fastq/                                <- Fastqc output directory, zip, html, sub-dirs for each zip
                                                   contaning histograms, reports html and summary
      trim-paired-fastq/
-         paired/                               <- Sequences that survived pair and trim
+         paired/                               <- Sequences that survived pair and trim (go forward to merge)
          unpaired/                             <- Sequences that didn't survive pair and trim
          paired-merged/
-             merged/                           <- Sequences that could be merged
-             merged-length-selected/           <- Merged sequences selected for length (fastq)
-             merged-length-secected-fasta/     <- Merged sequences output as fasta
-             merged-length-selected-calapsed/  <- Merged sequences collapsed from fastas 
-                                                  i.e. identical sequences combined
+             merged/                           <- Sequences that could be merged (go forward to demultiplex)
              not-merged/                       <- Sequences that could not be merged
-             qc/                               <- Quality histograms on merged data
+     demultiplexed/
+         unknown/                              <- Sequences which couldn't be identified by primer
+             fastq/
+         PRIMER/                               
+             fastq/                            <- Demultiplexed sequences by primer
+             length-selected-fastq/            <- Short sequences removed
+             length-selected-fasta/            <- Converted to fasta
+             dereplicated-fasta/               <- Sequences are dereplicated within a sample (go forward to cluster)
+     clustered/                                <- Dereplicated fastas are concatenated and sequences clustered across samples
+     blasted/                                  <- Clustered sequences are blasted against reference database
+     manual-checking/                          <- Summarised format of blast results ready for manual checking
+
 ```
 
-At each stage the pipeline will create SLURM files and place them in the slrum-files directory. These should be run manually by the user using the appropriate SLURM commands e.g. sbatch ```<file>.slrum```. The running SLURM processes will first touch a "running" file to indicate it has started e.g. "adaptor_check_running" when the process has finished it will mv the running file to a "done" file e.g. "adaptor_check_done". The running process will also redirect stdout and stderr to the process name plus their job number e.g. "adaptor_check_964605.out" and "adaptor_check_964605.err". Some of the processes output to stdout and some to stderr so it's best to check both.
+At each stage the pipeline will create SLURM files and place them in the slrum-files directory. These should be run manually by the user using the appropriate SLURM commands e.g. ```sbatch <file>.slrum```. The running SLURM processes will first touch a "running" file to indicate it has started e.g. "adaptor_check_running" and when the process has finished it will ```mv``` the running file to a "done" file e.g. "adaptor_check_done". The running process will also redirect stdout and stderr to the process name plus their job number e.g. "adaptor_check_964605.out" and "adaptor_check_964605.err". Some of the processes output to stdout and some to stderr so it's best to check both.
+
+## Final output with *create_summary_matrix.py*
+
+After manual checking of the summary blast output, the *-centroid-ids.csv and *-now-manual-edit.xlsx file can be converted into a matrix summarising the total number of sequence reads found in each sample for each identified taxon.
 
 ## Helper scripts
 There are two helper scripts that extract data out of some of the output files in to a summary table for easy digestion. These are outlined below.
 
-### process_trim_stats.py
+### *process_trim_stats.py*
 This script works upon trim_and_pair_original_files_<jobid>.err file. Given the file as input it will output a CSV file containing the sample, total number of reads, successful trim and paired number, forwards only, reverse only and dropped.
 
-### process_merge_stats.py
+### *process_merge_stats.py*
 This script works upon merge_trim_and_paired_files_<jobid>.out file. Given the file as input it will output a CSV file containing the sample, number of reads, combined, uncombined and percent combined. 
 
-# Running BLAST on the output
-Once you have run through the pipeline and you have your collapsed FASTA files then you might want to run them through BLAST. To run the BLAST follow these instructions. Note that the scripts are mostly hardcoded at the moment and will require editing for your particular paths and needs.
-
- 1. cd BLAST-Tools
- 2. Create a directory called "fasta/DNA" and copy the collapsed FASTA output from the pipeline in to it.
- 3. Create a directory called "blast-db" and copy your BLAST database in to it. You can download the whole BLAST database from the NCBI or create your own.
- 4. Create a directory called "blast_summary" and "blast_results" and "blast_summary_table"
- 5. cd jobs
- 6. Edit the blast-file-template.txt directory paths and edit the database names in the blastn command line.
- 7. Run the make-jobs.sh script. This will create the jobs in the slrum/ directory and start running them.
- 8. The csv output for each BLAST file will be output in "blast_results"
- 9. Once the BLAST has finished run bin/blast_summary.py to summarise the BLAST results for each file.
- 10. Once the BLAST summary has finished run the bin/create_blast_results_table.py to summarise the summaries.
 
 # Papers that the pipeline was used in
 1. [Using DNA metabarcoding to investigate honey bee foraging reveals limited flower use despite high floral availability](http://www.nature.com/articles/srep42838)
