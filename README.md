@@ -92,3 +92,4 @@ This script works upon merge_trim_and_paired_files_<jobid>.out file. Given the f
 4. [Generalisation and specialisation in hoverfly (Syrphidae) grassland pollen transport networks revealed by DNA metabarcoding](https://doi.org/10.1111/1365-2656.12828)
 5. [Pollen metabarcoding reveals broad and species-specific resource use by urban bees](https://doi.org/10.7717/peerj.5999)
 7. [Floral resource partitioning by individuals within generalised hoverfy pollination networks revealed by DNA metabarcoding](https://doi.org/10.1038/s41598-018-23103-0)
+8. [Shifts in honeybee foraging reveal historical changes in floral resources](https://www.nature.com/articles/s42003-020-01562-4)
