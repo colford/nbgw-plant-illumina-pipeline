@@ -56,8 +56,10 @@ def get_species(matched):
     species_list = []
     for match in matched:
         bits = match[3].strip()
+        perident = match[2].strip()
+        quercov = match[6].strip()
         parts = match[4].split('|')
-        species_list.append('%s %s %s (%s)' % (parts[3],parts[1],parts[2],bits))
+        species_list.append('%s %s %s (%s, PID:%s%%, QC:%s%%)' % (parts[3],parts[1],parts[2],bits,perident,quercov))
 
     return species_list
 
@@ -274,14 +276,15 @@ def blast_summary(blast_fname, otu_fname, out_fname):
                 sid_description = row[1]
                 percent_score = row[2]
                 bit_score = row[11]
-                desc = row[13]
-                if len(row) > 14:
-                    desc = row[13] + '|' + row[14].split('|')[1]
+                query_cover = row[13] 
+                desc = row[14]
+                if len(row) > 15:
+                    desc = row[14] + '|' + row[15].split('|')[1]
                 description = row[1] + '|' + desc
 
                 # Save off the data into the set
                 last_id = sid
-                working_set[row[0]].append([sid,1,percent_score,bit_score,description,sid_description])
+                working_set[row[0]].append([sid,1,percent_score,bit_score,description,sid_description,query_cover])
 
             # There might be one left to process
             if len(working_set) > 0:

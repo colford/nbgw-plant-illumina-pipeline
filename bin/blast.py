@@ -57,7 +57,7 @@ def blast(project_dir, primer):
         blast_csv = '%s/blast-%s.csv' % (blast_dir, clusterd_file)
         blast_log = '%s/blast-log-%s.txt' % (blast_dir, clusterd_file)
         
-        sl.write("blastn -query '%s' -db 'restrictedblastdb' -out '%s' -outfmt '10 std score stitle' -max_target_seqs 20 -num_threads 16 >& %s\n"
+        sl.write("blastn -query '%s' -db 'restrictedblastdb' -out '%s' -outfmt '10 std score qcovs stitle' -max_target_seqs 20 -num_threads 16 >& %s\n"
                  % (clusterd_path, blast_csv, blast_log))
 
         sl.write('popd\n')

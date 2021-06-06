@@ -45,7 +45,7 @@ with open('blast-concat-clustered-file.slurm', 'w') as sl:
     clustered_blast_fname = os.path.join(parts[0],parts[1].split('.')[0] + '_blast.csv')
     blast_log = os.path.join(parts[0],parts[1].split('.')[0] + '_blast_log.txt')
     
-    sl.write("blastn -query '%s' -db '%s' -out '%s' -outfmt '10 std score stitle' -max_target_seqs 20 -num_threads 16 >& %s\n"
+    sl.write("blastn -query '%s' -db '%s' -out '%s' -outfmt '10 std score qcovs stitle' -max_target_seqs 20 -num_threads 16 >& %s\n"
              % (cluster_file_multis, blast_database, clustered_blast_fname, blast_log))
 	sl.write('echo "Finished BLAST"\n')
 			 
