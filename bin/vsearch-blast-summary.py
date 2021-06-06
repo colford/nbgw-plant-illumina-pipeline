@@ -59,7 +59,7 @@ def get_species(matched):
         perident = match[2].strip()
         quercov = match[6].strip()
         parts = match[4].split('|')
-        species_list.append('%s %s %s (%s, PID:%s%%, QC:%s%%)' % (parts[3],parts[1],parts[2],bits,perident,quercov))
+        species_list.append('%s %s %s (%s; PID:%s%%; QC:%s%%)' % (parts[3],parts[1],parts[2],bits,perident,quercov))
 
     return species_list
 

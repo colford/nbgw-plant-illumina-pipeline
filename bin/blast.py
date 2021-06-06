@@ -17,6 +17,8 @@ def create_dir(path):
 
 def blast(project_dir, primer):
 
+	home = os.path.expanduser("~")
+
     cluster_dir = '%s/clustered' % project_dir
     blast_dir = '%s/blasted' % project_dir
 
@@ -51,7 +53,7 @@ def blast(project_dir, primer):
 
         sl.write('# Move to the BLAST db directory\n')
         sl.write('pushd .\n')
-        sl.write('cd /home/b.bsp801/BLAST-Tools/blast-db\n')
+        sl.write('cd %s/BLAST-Tools/blast-db\n' % home) 
         sl.write('# Run the BLAST\n')
 
         blast_csv = '%s/blast-%s.csv' % (blast_dir, clusterd_file)
@@ -64,7 +66,7 @@ def blast(project_dir, primer):
 
         sl.write('module rm BLAST/2.2.31+\n')
         sl.write('module rm compiler/intel/16.0\n')
-        sl.write('module add python/2.6.7\n')
+        sl.write('module add python/2.7.9\n')
 
         # Process the BLAST results
         blast_summary = '%s/blast-summary-%s.csv' % (blast_dir, clusterd_file)
@@ -77,8 +79,6 @@ def blast(project_dir, primer):
         sl.write('mv -f %s %s\n' % (blast_summary_without_header, blast_summary)) 
 
         # Process blast summary for manual excel checking
-        sl.write('module unload python/2.6.7\n')
-        sl.write('module add python/2.7.9\n')
         sl.write('python %s/process_vsearch_blast_output_for_excel.py --csv=%s --project_dir=%s\n' %
                     (script_dir(), blast_summary, project_dir)) 
 
