@@ -187,7 +187,7 @@ def process_set(fd,blast_results,otu):
     for blast_id in blast_results:
         
         # Sort the entries by top bit score
-        blast_results[blast_id].sort(key = lambda row: row[3],reverse=True)
+        blast_results[blast_id].sort(key = lambda row:float(row[3]),reverse=True)
 
         # Go through the entries and pick out all the top bit scored ones
         for entry in blast_results[blast_id]:
