@@ -16,8 +16,7 @@ def create_dir(path):
         pass
 
 def blast(project_dir, primer):
-
-	home = os.path.expanduser("~")
+    home = os.path.expanduser("~")
 
     cluster_dir = '%s/clustered' % project_dir
     blast_dir = '%s/blasted' % project_dir
